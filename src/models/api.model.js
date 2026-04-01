@@ -1,7 +1,11 @@
 import mongoose from "mongoose";
 
 const apiSchema = new mongoose.Schema({
-    userId: mongoose.Schema.Types.ObjectId,
+    userId:{
+        type:  mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
+    },
     name: String,
     url: String,
     method: String,
@@ -9,4 +13,4 @@ const apiSchema = new mongoose.Schema({
     body: Object
 });
 
-export default mongoose.model('api', apiSchema);
+export default mongoose.model('API', apiSchema);
