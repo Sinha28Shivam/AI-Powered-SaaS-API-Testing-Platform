@@ -4,6 +4,7 @@ import API from '../models/api.model.js';
 import TestReport from '../models/testReport.model.js';
 import { runApiTest } from '../services/tester.service.js';
 import { analyzeTestResult } from '../services/ai.service.js';
+import { prisma } from '../prismaClient.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -40,6 +41,16 @@ export const setupTestWorker = () => {
                 responseData: testResult.responseData,
                 success: testResult.success,
                 aiInsights
+            });
+
+            // 5. Instantly log Relational Analytics into PostgreSQL via Prisma
+            await prisma.apiMetric.create({
+                data: {
+                    apiId: api._id.toString(),
+                    responseTime: parseInt(testResult.responseTime || 0, 10),
+                    status: parseInt(testResult.status || 500, 10),
+                    success: testResult.success
+                }
             });
 
             console.log(`[Worker] Successfully completed testing API!`);

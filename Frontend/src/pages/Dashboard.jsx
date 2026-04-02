@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Play, RefreshCw, Layers } from 'lucide-react';
+import { Plus, Play, RefreshCw, Layers, Trash2 } from 'lucide-react';
 import api from '../api';
 
 const Dashboard = () => {
@@ -65,6 +65,19 @@ const Dashboard = () => {
         }
     };
 
+    const handleDeleteApi = async (apiId) => {
+        if (!window.confirm("Are you sure you want to delete this target and all its AI reports?")) return;
+        try {
+            await api.delete(`/apis/${apiId}`);
+            setToast("Target deleted successfully.");
+            setTimeout(() => setToast(null), 3000);
+            fetchApis();
+        } catch (err) {
+            setToast("Failed to delete target");
+            setTimeout(() => setToast(null), 3000);
+        }
+    };
+
     if (loading) return <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px'}}><RefreshCw className="spin" /></div>;
 
     return (
@@ -85,49 +98,54 @@ const Dashboard = () => {
             </div>
 
             {apis.length === 0 ? (
-                <div className="glass-panel" style={{ textAlign: 'center', padding: '64px 20px' }}>
-                    <Layers size={48} color="var(--text-secondary)" style={{ marginBottom: '16px' }} />
-                    <h3>No APIs Confirgured Yet</h3>
-                    <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>Add your first endpoint to start the AI analysis.</p>
-                    <button className="btn btn-secondary" onClick={() => setShowModal(true)}>Add an API</button>
+                <div className="glass-panel stagger-1" style={{ textAlign: 'center', padding: '80px 20px' }}>
+                    <Layers size={56} color="var(--accent-neon)" style={{ marginBottom: '24px', filter: 'drop-shadow(0 0 10px var(--accent-neon-glow))' }} />
+                    <h3 style={{ fontSize: '1.5rem' }}>No APIs Configured Yet</h3>
+                    <p style={{ color: 'var(--text-secondary)', marginBottom: '32px', fontSize: '1.1rem' }}>Add your first target endpoint to initiate the AI engine.</p>
+                    <button className="btn btn-primary" onClick={() => setShowModal(true)}>Deploy First Target</button>
                 </div>
             ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '24px' }}>
-                    {apis.map(apiEndpoint => (
-                        <div key={apiEndpoint._id} className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '32px' }}>
+                    {apis.map((apiEndpoint, index) => (
+                        <div key={apiEndpoint._id} className={`glass-panel genz-card stagger-${(index % 3) + 1}`} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                 <div>
-                                    <h3 style={{ marginBottom: '4px' }}>{apiEndpoint.name}</h3>
-                                    <span style={{ 
-                                        display: 'inline-block', 
-                                        fontSize: '0.75rem', 
-                                        padding: '2px 8px', 
-                                        borderRadius: '4px', 
-                                        background: 'rgba(255,255,255,0.1)',
-                                        color: apiEndpoint.method === 'GET' ? 'var(--accent-neon)' : 'var(--accent-purple)',
-                                        fontWeight: 'bold'
-                                    }}>
+                                    <h3 style={{ marginBottom: '12px', fontSize: '1.4rem' }}>{apiEndpoint.name}</h3>
+                                    <span className={`badge badge-${apiEndpoint.method}`}>
                                         {apiEndpoint.method}
                                     </span>
                                 </div>
+                                <button 
+                                    onClick={() => handleDeleteApi(apiEndpoint._id)} 
+                                    style={{ background: 'var(--danger-glow)', border: '1px solid var(--danger)', color: 'var(--text-primary)', cursor: 'pointer', transition: 'all 0.2s', padding: '6px', borderRadius: '6px'}} 
+                                    className="btn"
+                                >
+                                    <Trash2 size={16} />
+                                </button>
                             </div>
                             
-                            <div style={{ background: 'rgba(0,0,0,0.3)', padding: '12px', borderRadius: 'var(--radius-sm)', fontSize: '0.85rem', color: 'var(--text-secondary)', overflowX: 'hidden', textOverflow: 'ellipsis' }}>
+                            <div style={{ background: 'rgba(0,0,0,0.5)', padding: '16px', borderRadius: 'var(--radius-md)', fontSize: '0.9rem', color: 'var(--text-primary)', border: '1px solid rgba(255,255,255,0.05)', letterSpacing: '0.5px' }}>
                                 {apiEndpoint.url}
                             </div>
                             
-                            <div style={{ display: 'flex', gap: '12px', marginTop: 'auto' }}>
+                            <div style={{ display: 'flex', gap: '8px', marginTop: 'auto', flexWrap: 'wrap' }}>
                                 <button 
                                     className="btn btn-primary" 
-                                    style={{ flex: 1 }}
+                                    style={{ flex: '1 1 100%' }}
                                     onClick={() => runTest(apiEndpoint._id)}
                                     disabled={runningTest === apiEndpoint._id}
                                 >
                                     {runningTest === apiEndpoint._id ? <RefreshCw size={16} className="spin" /> : <Play size={16} />} 
                                     Run AI Test
                                 </button>
-                                <button className="btn btn-secondary" onClick={() => navigate(`/api/${apiEndpoint._id}/reports`)}>
+                                <button className="btn btn-secondary" onClick={() => navigate(`/api/${apiEndpoint._id}/reports`)} style={{flex: 1}}>
                                     Reports
+                                </button>
+                                <button className="btn btn-secondary" onClick={() => navigate(`/api/${apiEndpoint._id}/docs`)} style={{ background: 'rgba(138, 43, 226, 0.1)', color: 'var(--accent-purple)', flex: 1}}>
+                                    Docs
+                                </button>
+                                <button className="btn btn-secondary" onClick={() => navigate(`/api/${apiEndpoint._id}/analytics`)} style={{ background: 'rgba(255, 152, 0, 0.1)', color: 'var(--accent-orange)', flex: 1}}>
+                                    Graph
                                 </button>
                             </div>
                         </div>
@@ -136,9 +154,9 @@ const Dashboard = () => {
             )}
 
             {showModal && (
-                <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000}}>
-                    <div className="glass-panel" style={{ width: '400px' }}>
-                        <h2 style={{ marginBottom: '24px' }}>Add New API</h2>
+                <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(5, 5, 8, 0.9)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000}}>
+                    <div className="glass-panel stagger-1" style={{ width: '480px', border: '1px solid var(--accent-neon)', boxShadow: '0 0 50px rgba(0,255,204,0.1)' }}>
+                        <h2 style={{ marginBottom: '32px', textAlign: 'center', fontSize: '1.8rem' }}>Initialize Target</h2>
                         <form onSubmit={handleAddApi}>
                             <div className="input-group">
                                 <label>Internal Name</label>

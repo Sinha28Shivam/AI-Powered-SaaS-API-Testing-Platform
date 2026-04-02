@@ -3,6 +3,7 @@ import API from "../models/api.model.js";
 import TestReport from "../models/testReport.model.js";
 import { enqueueTest } from "../queues/test.queue.js";
 import { analyzeTestResult } from "../services/ai.service.js";
+import { generateOpenApiSpec } from '../services/swagger.service.js';
 
 export const addApi = async (req, res) => {
     try {
@@ -76,3 +77,43 @@ export const getApiReports = async (req, res, next) => {
         next(err);
     }
 }
+
+export const getApiDocs = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        // Ensure user owns API
+        const api = await API.findOne({ _id: id, userId: req.user.id });
+        if (!api) return res.status(404).json({ message: "API not found" });
+
+        // Grab the MOST RECENT successful test report
+        const report = await TestReport.findOne({ apiId: id, success: true }).sort({ createdAt: -1 });
+        if (!report) return res.status(404).json({ message: "Run a successful AI test first to generate schemas." });
+
+        // Map live response data to Swagger Schema
+        const swaggerJson = generateOpenApiSpec(api, report);
+
+        // Send back pure, valid JSON!
+        res.json(swaggerJson);
+    } catch (err) {
+        next(err);
+    }
+};
+
+
+export const deleteApi = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        // 1. Delete the main API
+        const api = await API.findOneAndDelete({ _id: id, userId: req.user.id });
+        if (!api) return res.status(404).json({ message: "API not found" });
+
+        // 2. Cleanup: Cascade delete all associated test reports in the database
+        await TestReport.deleteMany({ apiId: id });
+
+        res.json({ message: "API target and all associated AI reports deleted successfully." });
+    } catch (err) {
+        next(err);
+    }
+};
