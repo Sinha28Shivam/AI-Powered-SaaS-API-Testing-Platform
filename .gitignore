@@ -1,2 +1,13 @@
-node_modules/
-.env
+# Ignore node_modules in both folders
+Backend/node_modules/
+Frontend/node_modules/
+
+# Ignore environment files
+Backend/.env
+Frontend/.env
+
+# Optional: ignore all .env everywhere
+*.env
+
+# Logs
+*.log
