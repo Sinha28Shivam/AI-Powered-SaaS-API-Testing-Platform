@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: ai_saas_mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15
+    container_name: ai_saas_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:alpine
+    container_name: ai_saas_redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  backend:
+    build: 
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: ai_saas_backend
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGO_URI=mongodb://mongodb:27017/ai_powered_saas
+      - DATABASE_URL=postgresql://postgres:1234@postgres:5432/mydb
+      - REDIS_URL=redis://redis:6379
+    env_file:
+      - ./Backend/.env
+    depends_on:
+      - mongodb
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+      args:
+        # Pass backend address at build-time if needed by Vite, 
+        # but typically people use a relative URL in prod if served from same domain.
+        # Since we use separate ports, we point it to the host machine.
+        - VITE_API_BASE_URL=http://localhost:5000/api
+    container_name: ai_saas_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
+  postgres_data:

@@ -9,8 +9,10 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const redisConnection = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
-    maxRetriesPerRequest: null
+const redisUrl = process.env.REDIS_URL ? process.env.REDIS_URL.trim() : 'redis://localhost:6379';
+const redisConnection = new Redis(redisUrl, {
+    maxRetriesPerRequest: null,
+    family: 4 // Force IPv4 resolution
 });
 
 export const setupTestWorker = () => {

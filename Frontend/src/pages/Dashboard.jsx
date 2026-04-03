@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Play, RefreshCw, Layers, Trash2 } from 'lucide-react';
 import api from '../api';
+import toast from 'react-hot-toast';
+import { SkeletonGrid } from '../components/SkeletonLoader';
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -15,7 +17,6 @@ const Dashboard = () => {
     const [method, setMethod] = useState('GET');
     const [headers, setHeaders] = useState('{\n  "Content-Type": "application/json"\n}');
     const [body, setBody] = useState('{\n  \n}');
-    const [toast, setToast] = useState(null);
     
     // Testing state
     const [runningTest, setRunningTest] = useState(null);
@@ -46,8 +47,10 @@ const Dashboard = () => {
             setHeaders('{\n  "Content-Type": "application/json"\n}');
             setBody('{\n  \n}');
             fetchApis();
+            toast.success("Target Successfully Initialized");
         } catch (err) {
             console.error(err);
+            toast.error(err.response?.data?.message || "Failed to add target");
         }
     };
 
@@ -55,11 +58,9 @@ const Dashboard = () => {
         setRunningTest(apiId);
         try {
             await api.post(`/apis/${apiId}/test`);
-            setToast('Test started in background! Check reports shortly.');
-            setTimeout(() => setToast(null), 3000);
+            toast.success('Test active in Background. Waiting on Gemini...');
         } catch(err) {
-            setToast('Failed to queue test');
-            setTimeout(() => setToast(null), 3000);
+            toast.error(err.response?.data?.message || 'Failed to queue test. Rate limit exceeded?');
         } finally {
             setRunningTest(null);
         }
@@ -69,24 +70,17 @@ const Dashboard = () => {
         if (!window.confirm("Are you sure you want to delete this target and all its AI reports?")) return;
         try {
             await api.delete(`/apis/${apiId}`);
-            setToast("Target deleted successfully.");
-            setTimeout(() => setToast(null), 3000);
+            toast.success("Target wiped successfully.");
             fetchApis();
         } catch (err) {
-            setToast("Failed to delete target");
-            setTimeout(() => setToast(null), 3000);
+            toast.error("Failed to delete target");
         }
     };
 
-    if (loading) return <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px'}}><RefreshCw className="spin" /></div>;
+    if (loading) return <SkeletonGrid />;
 
     return (
         <div>
-            {toast && (
-                <div style={{ position: 'fixed', top: 20, right: 32, background: 'var(--accent-neon)', color: '#000', padding: '12px 24px', borderRadius: 'var(--radius-sm)', fontWeight: 600, zIndex: 1000, boxShadow: '0 4px 12px rgba(0,0,0,0.3)', animation: 'fadeIn 0.3s ease'}}>
-                    {toast}
-                </div>
-            )}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
                 <div>
                     <h1 style={{ fontSize: '2rem', marginBottom: '8px' }}>Your APIs</h1>

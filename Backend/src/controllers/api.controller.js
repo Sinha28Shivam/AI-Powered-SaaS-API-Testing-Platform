@@ -61,6 +61,9 @@ export const testApiEndpoint = async (req, res, next) => {
 export const getApiReports = async (req, res, next) => {
     try {
         const { id } = req.params;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 5;
+        const skip = (page - 1) * limit;
 
         // Ensure the API belongs to the user
         const api = await API.findOne({ _id: id, userId: req.user.id });
@@ -68,11 +71,18 @@ export const getApiReports = async (req, res, next) => {
             return res.status(404).json({ message: "API not found" });
         }
 
-        // Fetch all test reports sorted by the newest first
+        const totalReports = await TestReport.countDocuments({ apiId: id });
+        
         const reports = await TestReport.find({ apiId: id })
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
 
-        res.json(reports);
+        res.json({
+            reports,
+            totalPages: Math.ceil(totalReports / limit) || 1,
+            currentPage: page
+        });
     } catch (err) {
         next(err);
     }

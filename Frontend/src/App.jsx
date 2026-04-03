@@ -8,6 +8,7 @@ import Layout from './components/Layout';
 import Reports from './pages/Reports';
 import Docs from './pages/Docs';
 import Analytics from './pages/Analytics';
+import { Toaster } from 'react-hot-toast';
 
 const ProtectedRoute = ({ children }) => {
     const { user } = useContext(AuthContext);
@@ -17,24 +18,32 @@ const ProtectedRoute = ({ children }) => {
 
 const App = () => {
     return (
-        <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            
-            <Route path="/" element={
-                <ProtectedRoute>
-                    <Layout />
-                </ProtectedRoute>
-            }>
-                <Route index element={<Navigate to="/dashboard" replace />} />
-                <Route path="dashboard" element={<Dashboard />} />
-                <Route path="api/:id/reports" element={<Reports />} />
-                <Route path="api/:id/docs" element={<Docs />} />
-                <Route path="api/:id/analytics" element={<Analytics />} />
-            </Route>
+        <>
+            <Toaster 
+                position="top-right" 
+                toastOptions={{ 
+                    style: { background: 'var(--bg-panel)', color: 'var(--text-primary)', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' } 
+                }} 
+            />
+            <Routes>
+                <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
+                    
+                    <Route path="/" element={
+                        <ProtectedRoute>
+                            <Layout />
+                        </ProtectedRoute>
+                    }>
+                        <Route index element={<Navigate to="/dashboard" replace />} />
+                        <Route path="dashboard" element={<Dashboard />} />
+                        <Route path="api/:id/reports" element={<Reports />} />
+                        <Route path="api/:id/docs" element={<Docs />} />
+                        <Route path="api/:id/analytics" element={<Analytics />} />
+                    </Route>
 
-            <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
+                <Route path="*" element={<Navigate to="/login" replace />} />
+            </Routes>
+        </>
     );
 };
 
