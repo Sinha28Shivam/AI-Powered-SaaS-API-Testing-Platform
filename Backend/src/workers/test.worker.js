@@ -6,6 +6,7 @@ import { runApiTest } from '../services/tester.service.js';
 import { analyzeTestResult } from '../services/ai.service.js';
 import { prisma } from '../prismaClient.js';
 import dotenv from 'dotenv';
+import { validateTargetUrl } from '../utils/ssrfGuard.js';
 
 dotenv.config();
 
@@ -25,6 +26,8 @@ export const setupTestWorker = () => {
             // 1. Fetch the API definition
             const api = await API.findOne({ _id: apiId, userId });
             if (!api) throw new Error("API not found in database.");
+
+            await validateTargetUrl(api.url);
 
             // 2. Run the actual HTTP test (Takes time)
             const testResult = await runApiTest(api);
