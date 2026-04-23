@@ -1,0 +1,117 @@
+/* Web 1.0 GeoCities Style */
+
+.landing-page {
+  width: 100vw;
+  min-height: 100vh;
+  /* Classic starry background */
+  background: black url('https://web.archive.org/web/20091027054942im_/http://www.geocities.com/Tokyo/Towers/4417/stars.gif') repeat;
+  color: white;
+  font-family: "Times New Roman", Times, serif;
+  text-align: center;
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.hero-3d-container {
+  width: 100%;
+  height: 400px;
+  margin: 20px auto;
+  border: 5px ridge #808080;
+  background-color: transparent;
+  max-width: 600px;
+}
+
+.landing-content {
+  position: relative;
+  z-index: 10;
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: black;
+  border: 4px solid red;
+}
+
+.landing-header {
+  margin-bottom: 20px;
+}
+
+.logo-minimal {
+  font-size: 3rem;
+  color: yellow;
+  text-shadow: 2px 2px red;
+  font-weight: bold;
+}
+
+.minimal-nav {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+a.nav-link {
+  color: #0000FF;
+  text-decoration: underline;
+  font-size: 1.2rem;
+  background-color: silver;
+  padding: 2px 5px;
+  border: 3px outset #fff;
+}
+
+a.nav-link:active {
+  border-style: inset;
+  color: #FF0000;
+}
+
+a.nav-link:visited {
+  color: #800080;
+}
+
+.landing-main {
+  padding: 20px 0;
+}
+
+h1.display-title {
+  color: #00FFFF;
+  font-size: 2.5rem;
+  margin: 20px 0;
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  color: lime;
+  font-style: italic;
+  margin: 20px 0;
+}
+
+.hero-actions {
+  margin: 40px 0;
+}
+
+.btn-glass-primary, .btn-glass-secondary {
+  display: inline-block;
+  background-color: silver;
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding: 10px 20px;
+  border: 4px outset white;
+  margin: 0 10px;
+  cursor: pointer;
+}
+
+.btn-glass-primary:active, .btn-glass-secondary:active {
+  border-style: inset;
+}
+
+.landing-footer {
+  margin-top: 40px;
+  border-top: 2px dotted white;
+  padding-top: 10px;
+}
+
+.construction-gif {
+  margin: 20px 0;
+}

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import SwaggerUI from "swagger-ui-react";
 import "swagger-ui-react/swagger-ui.css";
-import { ArrowLeft, ExternalLink } from 'lucide-react';
 import api from '../api';
 
 const Docs = () => {
@@ -26,30 +25,34 @@ const Docs = () => {
         fetchDocs();
     }, [id]);
 
-    if (loading) return <div style={{ textAlign: 'center', marginTop: '100px'}}>Building OpenAPI schemas from past backend tests...</div>;
+    if (loading) return <div style={{ textAlign: 'center', marginTop: '50px', fontSize: '1.5rem', color: 'yellow', fontWeight: 'bold' }}><blink>Generating Docs...</blink></div>;
     
-    // We render Swagger in a white/light panel because it doesn't natively support Dark Mode optimally yet.
     return (
-        <div style={{ background: '#f8f9fc', borderRadius: 'var(--radius-lg)', padding: '24px', minHeight: '80vh', color: '#000' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '16px', borderBottom: '1px solid #e2e8f0', marginBottom: '24px' }}>
+        <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '10px', borderBottom: '2px dashed black', marginBottom: '20px' }}>
                 <button 
                     onClick={() => navigate('/dashboard')} 
-                    style={{ background: '#fff', border: '1px solid #cbd5e1', padding: '8px 16px', borderRadius: '100px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', color: '#334155', fontWeight: 600 }}
+                    className="btn"
                 >
-                    <ArrowLeft size={16} /> Back to Dashboard
+                    &lt;-- Return to Dashboard
                 </button>
-                <div style={{ fontSize: '0.85rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <ExternalLink size={16} /> OpenAPI 3.0.0 Spec
+                <div style={{ fontWeight: 'bold' }}>
+                    [ OpenAPI 3.0.0 Specification ]
                 </div>
             </div>
 
             {error ? (
-                <div style={{ textAlign: 'center', marginTop: '64px', color: '#ef4444'}}>
-                    <p style={{ fontWeight: 'bold' }}>{error}</p>
-                    <p style={{ fontSize: '0.9rem', color: '#64748b' }}>Make sure you have run at least one successful AI Test in the Dashboard first!</p>
+                <div style={{ textAlign: 'center', padding: '50px', border: '3px inset grey', background: '#e0e0e0' }}>
+                    <h3 style={{ color: 'red' }}>Error: {error}</h3>
+                    <p>Make sure you have run at least one successful test!</p>
                 </div>
             ) : (
-                <SwaggerUI spec={spec} />
+                <div style={{ border: '5px ridge grey', background: 'white', padding: '10px' }}>
+                    {/* Override some swagger fonts locally if needed, but it naturally handles its own styles */}
+                    <div style={{ fontFamily: 'sans-serif' }}>
+                        <SwaggerUI spec={spec} />
+                    </div>
+                </div>
             )}
         </div>
     );

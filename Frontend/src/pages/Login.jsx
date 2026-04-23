@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { Activity, Lock, Mail } from 'lucide-react';
 import api from '../api';
 
 const Login = () => {
@@ -24,60 +23,28 @@ const Login = () => {
     };
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-            <div className="glass-panel" style={{ width: '400px', textAlign: 'center' }}>
-                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-                    <Activity size={48} color="var(--accent-neon)" />
-                </div>
-                <h2 style={{ marginBottom: '8px' }}>Welcome Back</h2>
-                <p style={{ color: 'var(--text-secondary)', marginBottom: '24px', fontSize: '0.9rem' }}>
-                    Sign in to your AI testing workspace.
-                </p>
-
-                {error && (
-                    <div style={{ background: 'var(--danger-glow)', color: 'var(--danger)', padding: '10px', borderRadius: '8px', marginBottom: '16px', fontSize: '0.9rem' }}>
-                        {error}
+        <div style={{ backgroundColor: 'black', backgroundImage: "url('https://web.archive.org/web/20091027054942im_/http://www.geocities.com/Tokyo/Towers/4417/stars.gif')", color: 'white', fontFamily: '"Times New Roman", Times, serif', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ border: '5px ridge grey', backgroundColor: 'silver', color: 'black', padding: '20px', width: '400px' }}>
+                <h2 style={{ textAlign: 'center', borderBottom: '2px solid black', paddingBottom: '10px' }}>Member Login</h2>
+                
+                {error && <div style={{ color: 'red', fontWeight: 'bold', border: '2px solid red', padding: '5px', margin: '10px 0', backgroundColor: 'yellow' }}>ERROR: {error}</div>}
+                
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>
+                    <div>
+                        <label style={{ fontWeight: 'bold' }}>E-Mail Address:</label><br/>
+                        <input type="email" value={email} onChange={e=>setEmail(e.target.value)} required style={{ border: '2px inset #fff', width: '100%', padding: '5px' }} />
                     </div>
-                )}
-
-                <form onSubmit={handleSubmit} style={{ textAlign: 'left' }}>
-                    <div className="input-group">
-                        <label>Email Address</label>
-                        <div style={{ position: 'relative' }}>
-                            <Mail size={18} style={{ position: 'absolute', top: '14px', left: '12px', color: 'var(--text-secondary)' }} />
-                            <input 
-                                type="email" 
-                                placeholder="name@company.com" 
-                                style={{ width: '100%', paddingLeft: '40px' }}
-                                value={email}
-                                onChange={(e)=>setEmail(e.target.value)}
-                                required 
-                            />
-                        </div>
+                    <div>
+                        <label style={{ fontWeight: 'bold' }}>Secret Password:</label><br/>
+                        <input type="password" value={password} onChange={e=>setPassword(e.target.value)} required style={{ border: '2px inset #fff', width: '100%', padding: '5px' }} />
                     </div>
                     
-                    <div className="input-group">
-                        <label>Password</label>
-                        <div style={{ position: 'relative' }}>
-                            <Lock size={18} style={{ position: 'absolute', top: '14px', left: '12px', color: 'var(--text-secondary)' }} />
-                            <input 
-                                type="password" 
-                                placeholder="••••••••" 
-                                style={{ width: '100%', paddingLeft: '40px' }}
-                                value={password}
-                                onChange={(e)=>setPassword(e.target.value)}
-                                required 
-                            />
-                        </div>
-                    </div>
-
-                    <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '10px' }}>
-                        Sign In
-                    </button>
+                    <button type="submit" style={{ border: '4px outset white', backgroundColor: '#e0e0e0', fontWeight: 'bold', padding: '5px', cursor: 'pointer' }}>Submit Query</button>
                 </form>
-
-                <div style={{ marginTop: '24px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                    Don't have an account? <Link to="/signup">Create one</Link>
+                
+                <hr style={{ margin: '20px 0' }}/>
+                <div style={{ textAlign: 'center', fontSize: '0.9rem' }}>
+                    Not a member yet? <Link to="/signup" style={{ color: 'blue' }}>Click here to register!</Link>
                 </div>
             </div>
         </div>

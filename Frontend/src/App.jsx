@@ -8,6 +8,7 @@ import Layout from './components/Layout';
 import Reports from './pages/Reports';
 import Docs from './pages/Docs';
 import Analytics from './pages/Analytics';
+import Landing from './pages/Landing';
 import { Toaster } from 'react-hot-toast';
 
 const ProtectedRoute = ({ children }) => {
@@ -26,22 +27,22 @@ const App = () => {
                 }} 
             />
             <Routes>
+                <Route path="/" element={<Landing />} />
                 <Route path="/login" element={<Login />} />
-                    <Route path="/signup" element={<Signup />} />
-                    
-                    <Route path="/" element={
-                        <ProtectedRoute>
-                            <Layout />
-                        </ProtectedRoute>
-                    }>
-                        <Route index element={<Navigate to="/dashboard" replace />} />
-                        <Route path="dashboard" element={<Dashboard />} />
-                        <Route path="api/:id/reports" element={<Reports />} />
-                        <Route path="api/:id/docs" element={<Docs />} />
-                        <Route path="api/:id/analytics" element={<Analytics />} />
-                    </Route>
+                <Route path="/signup" element={<Signup />} />
+                
+                <Route element={
+                    <ProtectedRoute>
+                        <Layout />
+                    </ProtectedRoute>
+                }>
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/api/:id/reports" element={<Reports />} />
+                    <Route path="/api/:id/docs" element={<Docs />} />
+                    <Route path="/api/:id/analytics" element={<Analytics />} />
+                </Route>
 
-                <Route path="*" element={<Navigate to="/login" replace />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </>
     );

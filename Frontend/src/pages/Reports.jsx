@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Clock, ServerCrash, CheckCircle, AlertTriangle, ChevronLeft, ChevronRight, Ban } from 'lucide-react';
 import api from '../api';
 import { SkeletonList } from '../components/SkeletonLoader';
 
@@ -26,76 +25,81 @@ const Reports = () => {
 
     return (
         <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '32px' }}>
-                <button onClick={() => navigate('/dashboard')} className="btn btn-secondary" style={{ padding: '8px', borderRadius: '50%' }}>
-                    <ArrowLeft size={20} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px', borderBottom: '2px dashed black', paddingBottom: '10px' }}>
+                <button onClick={() => navigate('/dashboard')} className="btn">
+                    &lt;-- Go Back
                 </button>
                 <div>
-                    <h1 style={{ fontSize: '2rem', marginBottom: '4px' }}>AI Test Reports</h1>
-                    <p style={{ color: 'var(--text-secondary)' }}>Detailed Gemini analysis for your API endpoint.</p>
+                    <h1 style={{ color: 'blue' }}>AI Test Reports Log</h1>
+                    <p><i>View the raw data from the server tests.</i></p>
                 </div>
             </div>
 
             {loading ? <SkeletonList /> : data.reports.length === 0 ? (
-                <div className="glass-panel stagger-1" style={{ textAlign: 'center', padding: '64px' }}>
-                    <Ban size={48} color="var(--text-secondary)" style={{ marginBottom: '16px' }} />
-                    <h3>No Intelligence Captured Yet</h3>
-                    <p style={{ color: 'var(--text-secondary)' }}>Launch an AI Test to generate your first technical report.</p>
+                <div style={{ textAlign: 'center', padding: '50px', border: '3px inset grey', background: '#e0e0e0' }}>
+                    <h3 style={{ color: 'red' }}>Warning: No Data Found</h3>
+                    <p>Launch an AI Test to generate your first technical report.</p>
                 </div>
             ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                    {data.reports.map((report, index) => (
-                        <div key={report._id} className={`glass-panel stagger-${(index % 3) + 1}`} style={{ display: 'flex', flexDirection: 'column', gap: '16px', borderLeft: report.success ? '4px solid var(--success)' : '4px solid var(--danger)' }}>
-                            
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '16px' }}>
-                                <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-                                    {report.success ? <CheckCircle color="var(--success)" /> : <ServerCrash color="var(--danger)" />}
-                                    <h3 style={{ margin: 0 }}>HTTP {report.status}</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                    {data.reports.map((report) => (
+                        <div key={report._id} style={{ 
+                            background: 'white', 
+                            color: 'black', 
+                            border: '3px outset grey',
+                            borderLeft: report.success ? '10px solid green' : '10px solid red',
+                            padding: '15px'
+                        }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid silver', paddingBottom: '10px', marginBottom: '10px' }}>
+                                <div>
+                                    <h3 style={{ margin: 0, color: report.success ? 'green' : 'red' }}>
+                                        HTTP {report.status} - {report.success ? 'SUCCESS' : 'FAILED'}
+                                    </h3>
                                 </div>
-                                <div style={{ display: 'flex', gap: '8px', color: 'var(--text-secondary)', fontSize: '0.9rem', alignItems: 'center' }}>
-                                    <Clock size={16} /> {report.responseTime}ms
+                                <div>
+                                    <b>Time:</b> {report.responseTime}ms
                                 </div>
                             </div>
 
-                            <div>
-                                <h4 style={{ color: 'var(--accent-neon)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px', textShadow: '0 0 10px var(--accent-neon-glow)' }}>
-                                    <AlertTriangle size={18} /> Gemini's Insight
+                            <div style={{ marginBottom: '15px' }}>
+                                <h4 style={{ color: 'purple', textDecoration: 'underline' }}>
+                                    Gemini's Insight:
                                 </h4>
-                                <p style={{ lineHeight: '1.6', fontSize: '0.95rem' }}>
+                                <p style={{ marginTop: '5px' }}>
                                     {report.aiInsights || "No AI insight captured."}
                                 </p>
                             </div>
 
-                            <div style={{ background: 'var(--bg-primary)', borderRadius: 'var(--radius-sm)', padding: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                                <h5 style={{ marginBottom: '8px', color: 'var(--text-secondary)' }}>Raw Payload:</h5>
-                                <pre style={{ margin: 0, fontSize: '0.8rem', whiteSpace: 'pre-wrap', wordBreak: 'break-word', color: 'var(--text-primary)', fontFamily: 'monospace' }}>
+                            <div style={{ background: 'black', color: 'lime', padding: '10px', border: '2px inset grey' }}>
+                                <h5 style={{ marginBottom: '5px', color: 'white' }}>Raw Payload Data:</h5>
+                                <pre style={{ margin: 0, fontSize: '14px', whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontFamily: 'monospace' }}>
                                     {JSON.stringify(report.responseData, null, 2)}
                                 </pre>
                             </div>
 
-                            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textAlign: 'right', fontWeight: 600 }}>
-                                {new Date(report.createdAt).toLocaleString()}
+                            <div style={{ fontSize: '12px', textAlign: 'right', marginTop: '10px' }}>
+                                <i>Recorded on: {new Date(report.createdAt).toLocaleString()}</i>
                             </div>
                         </div>
                     ))}
                     
                     {/* Pagination Controls */}
                     {data.totalPages > 1 && (
-                        <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', alignItems: 'center', marginTop: '24px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', alignItems: 'center', marginTop: '20px', padding: '10px', background: 'silver', border: '3px ridge grey' }}>
                             <button 
-                                className="btn btn-secondary" 
+                                className="btn" 
                                 disabled={data.currentPage === 1}
                                 onClick={() => fetchReports(data.currentPage - 1)}
                             >
-                                <ChevronLeft size={16} /> Prev
+                                &lt;&lt; Prev Page
                             </button>
-                            <span style={{ fontWeight: 'bold' }}>Page {data.currentPage} of {data.totalPages}</span>
+                            <b>Page {data.currentPage} of {data.totalPages}</b>
                             <button 
-                                className="btn btn-secondary" 
+                                className="btn" 
                                 disabled={data.currentPage === data.totalPages}
                                 onClick={() => fetchReports(data.currentPage + 1)}
                             >
-                                Next <ChevronRight size={16} />
+                                Next Page &gt;&gt;
                             </button>
                         </div>
                     )}

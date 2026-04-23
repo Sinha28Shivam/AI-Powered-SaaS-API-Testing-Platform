@@ -1,32 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+/* Web 1.0 Global Styling */
 
 :root {
-  /* Premium Dark Theme Core */
-  --bg-primary: #0a0a0c;
-  --bg-secondary: #0f0f13;
-  --bg-panel: rgba(20, 20, 25, 0.65);
+  --bg-primary: black;
+  --bg-secondary: silver;
+  --bg-panel: silver;
   
-  /* Accents */
-  --accent-neon: #00ffcc;
-  --accent-neon-glow: rgba(0, 255, 204, 0.4);
-  --accent-purple: #8a2be2;
-  --accent-purple-glow: rgba(138, 43, 226, 0.4);
-  --accent-orange: #ff9800;
+  --text-primary: black;
+  --text-secondary: black;
+  --danger: red;
+  --danger-glow: transparent;
+  --success: green;
   
-  --text-primary: #f8f9fa;
-  --text-secondary: #a0a0a5;
-  --danger: #ff4d4f;
-  --danger-glow: rgba(255, 77, 79, 0.3);
-  --success: #00e676;
+  --radius-lg: 0px;
+  --radius-md: 0px;
+  --radius-sm: 0px;
   
-  /* Geometry */
-  --radius-lg: 24px;
-  --radius-md: 16px;
-  --radius-sm: 8px;
-  
-  /* Animation */
-  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-bouncy: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --transition-fast: none;
+  --transition-bouncy: none;
 }
 
 * {
@@ -36,28 +26,26 @@
 }
 
 body {
-  font-family: 'Inter', sans-serif;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+  font-family: "Times New Roman", Times, serif;
+  background-color: black;
+  color: white;
   min-height: 100vh;
-  /* Dark mesh gradient vibe */
-  background: radial-gradient(circle at 15% 10%, #151125 0%, var(--bg-primary) 50%),
-              radial-gradient(circle at 85% 90%, #0d1e1c 0%, var(--bg-primary) 50%);
-  background-attachment: fixed;
+  background: black url('https://web.archive.org/web/20091027054942im_/http://www.geocities.com/Tokyo/Towers/4417/stars.gif') repeat;
 }
 
 h1, h2, h3, h4, h5 {
-  font-weight: 700;
-  letter-spacing: -0.03em;
+  font-weight: bold;
 }
 
 a {
-  color: var(--accent-neon);
-  text-decoration: none;
-  transition: opacity var(--transition-fast);
+  color: #0000FF;
+  text-decoration: underline;
 }
-a:hover {
-  opacity: 0.8;
+a:visited {
+  color: #800080;
+}
+a:active {
+  color: #FF0000;
 }
 
 /* Base Buttons */
@@ -65,157 +53,73 @@ a:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 24px;
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  font-size: 0.95rem;
-  letter-spacing: -0.01em;
+  padding: 5px 10px;
+  font-weight: bold;
   cursor: pointer;
-  border: none;
-  outline: none;
-  gap: 8px;
-  transition: transform var(--transition-bouncy), box-shadow var(--transition-fast), background var(--transition-fast);
+  background-color: silver;
+  color: black;
+  border: 3px outset white;
+  text-decoration: none;
 }
 
-/* The satisfying click effect */
 .btn:active {
-  transform: scale(0.92) !important;
+  border-style: inset;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent-neon), #00d2ad);
-  color: #000;
-  box-shadow: 0 4px 15px var(--accent-neon-glow);
-}
-.btn-primary:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 25px var(--accent-neon-glow);
+  background-color: silver;
 }
 
 .btn-secondary {
-  background: rgba(255,255,255,0.03);
-  color: var(--text-primary);
-  border: 1px solid rgba(255,255,255,0.08);
-  backdrop-filter: blur(8px);
-}
-.btn-secondary:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.2);
-  transform: translateY(-4px);
+  background-color: silver;
 }
 
-/* Glassmorphism Gen-Z Cards */
+/* Retro Panels instead of Gen-Z Cards */
 .glass-panel {
-  background: var(--bg-panel);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-  padding: 24px;
-  transition: all var(--transition-bouncy);
+  background-color: silver;
+  color: black;
+  border: 5px ridge grey;
+  padding: 20px;
+  margin-bottom: 20px;
 }
 
-/* Card Hover Interactions */
 .genz-card {
-  position: relative;
-  overflow: hidden;
-}
-.genz-card::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent-neon), transparent);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-.genz-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  border-color: rgba(255,255,255,0.15);
-  box-shadow: 0 20px 40px rgba(0, 255, 204, 0.1);
-  z-index: 10;
-}
-.genz-card:hover::before {
-  opacity: 1;
+  /* No special hover effects */
 }
 
 /* Dynamic Method Badges */
 .badge {
   display: inline-block;
-  padding: 4px 12px;
-  border-radius: 100px;
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  padding: 2px 5px;
+  border: 2px outset white;
+  font-weight: bold;
+  background-color: #e0e0e0;
+  color: black;
 }
-.badge-GET {
-  background: rgba(0, 255, 204, 0.15);
-  color: var(--accent-neon);
-  border: 1px solid var(--accent-neon);
-  box-shadow: 0 0 15px var(--accent-neon-glow);
-}
-.badge-POST {
-  background: rgba(138, 43, 226, 0.15);
-  color: #dca3ff;
-  border: 1px solid var(--accent-purple);
-  box-shadow: 0 0 15px var(--accent-purple-glow);
-}
-.badge-PUT {
-  background: rgba(255, 152, 0, 0.15);
-  color: var(--accent-orange);
-  border: 1px solid var(--accent-orange);
-  box-shadow: 0 0 15px rgba(255, 152, 0, 0.3);
-}
-.badge-DELETE {
-  background: var(--danger-glow);
-  color: #ff7875;
-  border: 1px solid var(--danger);
-  box-shadow: 0 0 15px var(--danger-glow);
-}
+.badge-GET { color: blue; }
+.badge-POST { color: purple; }
+.badge-PUT { color: orange; }
+.badge-DELETE { color: red; }
 
-/* Animations */
-@keyframes slideUpFade {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Remove Animations */
+.stagger-1, .stagger-2, .stagger-3 {
+  animation: none;
 }
-
-.stagger-1 { animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both; }
-.stagger-2 { animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both; }
-.stagger-3 { animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both; }
 
 /* Inputs */
 .input-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 20px;
+  gap: 5px;
+  margin-bottom: 15px;
 }
 .input-group label {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-weight: bold;
 }
 .input-group input, .input-group textarea, .input-group select {
-  background: rgba(0,0,0,0.4);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: var(--radius-md);
-  padding: 14px 16px;
-  color: var(--text-primary);
-  font-family: inherit;
-  transition: all var(--transition-bouncy);
+  background: white;
+  border: 2px inset white;
+  padding: 5px;
+  color: black;
+  font-family: "Times New Roman", Times, serif;
 }
-.input-group input:focus, .input-group textarea:focus {
-  outline: none;
-  transform: scale(1.02);
-  border-color: var(--accent-neon);
-  box-shadow: 0 0 0 3px var(--accent-neon-glow);
-  background: rgba(0,0,0,0.6);
-}
-
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
